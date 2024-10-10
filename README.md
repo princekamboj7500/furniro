@@ -4,4 +4,4 @@
 
 2. Run the theme locally follow this link
    https://dev.to/quratulaiinn/setting-up-a-local-environment-for-shopify-theme-development-2ema
-   Instead of this cmd you need to clone the repo from github
+   Instead of this cmd shopify theme pull --store=your-store-name.myshopify.com you need to clone the repo from github
