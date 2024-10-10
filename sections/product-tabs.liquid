@@ -1,0 +1,170 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<div class="section-{{ section.id }}-padding">
+<div class="product-tabs">
+  <div class="page-width">
+  <ul class="tab-titles">
+    <li><a href="#description" class="active">Description</a></li>
+    <li><a href="#additional-info">Additional Information</a></li>
+    <li><a href="#reviews">Reviews [{{ product.reviews_count | default: 0 }}]</a></li>
+  </ul>
+  
+  <div class="tab-contents">
+    <div id="description" class="tab-content active">
+      {{ product.description }}
+    </div>
+    <div id="additional-info" class="tab-content">
+      <!-- Add product additional information here -->
+    </div>
+    <div id="reviews" class="tab-content">
+      {% render 'product-reviews' %}  <!-- Judge.me or other review app integration -->
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% schema %}
+{
+  "name": "Product Tabs",
+  "settings": [
+     {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Title"
+        },
+        {
+          "type": "richtext",
+          "id": "tab_content",
+          "label": "Tab Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Tabs"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.tab-titles {
+  list-style-type: none;
+  padding: 0;
+     display: flex;
+    justify-content: center;
+  gap:40px;
+}
+
+.tab-titles li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.tab-contents .tab-content.active {
+  display: block;
+}
+  .tab-titles li   a.active{
+    color:#000;
+  }
+.tab-titles li   a {
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 36px;
+    text-align: left;
+    text-decoration: none;
+    color: #9F9F9F;
+}
+  .tab-contents .tab-content {
+    display: none;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: justified;
+    padding: 20px 50px 30px;
+}
+  .tab-contents .tab-content .images img{
+    width:47%;
+  }
+    .tab-contents .tab-content .images{
+      display:flex;
+      gap:50px;
+      width:100%;
+      margin-top:30px;
+      justify-content:space-between;
+      
+    }
+{% endstyle %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  var tabLinks = document.querySelectorAll('.tab-titles a');
+  var tabContents = document.querySelectorAll('.tab-contents .tab-content');
+
+  tabLinks.forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+
+      // Remove 'active' class from all tab links and tab contents
+      tabLinks.forEach(function(link) {
+        link.classList.remove('active');
+      });
+      tabContents.forEach(function(content) {
+        content.classList.remove('active');
+      });
+
+      // Add 'active' class to the clicked tab link and its corresponding content
+      link.classList.add('active');
+      var tabId = link.getAttribute('href').substring(1);
+      document.getElementById(tabId).classList.add('active');
+    });
+  });
+
+  // Set the first tab and content as active on page load, if available
+  if (tabLinks.length > 0) {
+    tabLinks[0].classList.add('active');
+    tabContents[0].classList.add('active');
+  }
+});
+
+{% endjavascript %}
